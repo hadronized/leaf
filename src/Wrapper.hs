@@ -61,10 +61,7 @@ wrapperFromFile p = do
   ok <- doesFileExist p
   if ok then load else return ()
     where load = withFile p ReadMode $ \handle -> do
-                   lines <- lines `liftM` hGetContents handle
-                   let pairs = map (splitOn (==':')) lines
-                   print pairs
-                   return ()
-                   
-                   
-    
+                 lines <- lines `liftM` hGetContents handle
+                 let pairs = map (map chomp) $ map (wordsBy (==':')) lines
+                 print pairs
+                 return ()
