@@ -4,6 +4,7 @@ import Control.Monad
 import Data.List (intercalate)
 import Data.List.Split
 import HTML
+import Leaf.String
 import StyleSheet
 import System.Directory (doesFileExist)
 import System.IO
@@ -62,6 +63,6 @@ wrapperFromFile p = do
   if ok then load else return ()
     where load = withFile p ReadMode $ \handle -> do
                  lines <- lines `liftM` hGetContents handle
-                 let pairs = map (map chomp) $ map (wordsBy (==':')) lines
+                 let pairs = map (map strip) $ map (wordsBy (==':')) lines
                  print pairs
                  return ()
