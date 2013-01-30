@@ -9,6 +9,7 @@ import System.FilePath
 import System.IO
 import Text.Blaze.Html
 import Text.Blaze.Html.Renderer.String
+import Text.Pandoc
 import Wrapper
 
 data CLIFlag
@@ -71,8 +72,9 @@ generateHTML = do
   forM_ (_wrapperItems helper) $ \item -> do
     --let page = "www" </> item ++ ".html"
     content <- readFile $ "leaf" </> item ++ ".leafc"
-    writeFile ("www" </> item ++ ".html") $ renderHtml (ownWrapper item (toHtml content))
-    
+    let doc    = readMarkdown def content
+        output = writeHtml def doc
+    writeFile ("www" </> item ++ ".html") $ renderHtml (ownWrapper item output)
   
 main = do
   -- maybe get the options
