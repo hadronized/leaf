@@ -10,7 +10,6 @@ import Data.List.Split
 import Leaf.String
 import System.Directory (doesFileExist)
 import System.IO
-import Text.Blaze
 import Text.Blaze.Html as B
 import Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes as A
