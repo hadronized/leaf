@@ -81,4 +81,6 @@ main = do
   cliOpts <- getArgs >>= parseArgs
   case cliOpts of
     Nothing    -> usage
-    Just flags -> sequence_ $ treatArgs <$> flags
+    Just flags -> case flags of
+      [] -> usage
+      _  -> sequence_ $ treatArgs <$> flags
