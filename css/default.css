@@ -23,12 +23,11 @@ h1 {
 }
 
 h2 {
-    padding: 0;
+    padding-left: 2pc;
     margin: 0;
     font-size: 20px;
     color: #E1651D;
     width: 80%;
-    text-indent: 2pc;
     border-bottom: 1px dashed #E1651D;
 }
 
@@ -36,18 +35,19 @@ h3 {
     font-size: 18px;
     color: #E1951D;
     width: 25%;
-    text-indent: 2pc;
+    padding-left: 2pc;
     border-bottom: 1px dashed #E1951D;
 }
 
 h4 {
     font-size: 16px;
-    text-indent: 2pc;
+    padding-left: 2pc;
     color: #D31B3C;
 }
 
 p {
-    text-indent: 2pc;
+    padding-left: 2pc;
+    text-align: justify;
 
 }
 
@@ -97,6 +97,12 @@ span.spec-color {
     color: #AAAAAA;
 }
 
+#wrapper_content {
+}
+
+#wrapper_content img {
+}
+
 #wrapper_footer {
     margin-top: 2pc;
     border-top: 1px solid #AAAAAA;
@@ -106,9 +112,11 @@ span.spec-color {
 }
 
 #wrapper_footer_copyright {
+    text-align: center;
 }
 
 #wrapper_footer_generator {
+    text-align: center;
 }
 
 #wrapper_footer_generator code {
