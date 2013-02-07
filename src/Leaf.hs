@@ -37,7 +37,7 @@ treatArgs :: CLIFlag -> IO ()
 treatArgs flag =
   case flag of
     Init name -> initFromScratch name
-    Bootstrap -> bootstrap
+    Bootstrap -> bootstrap >> return ()
     Generate  -> generateHTML
 
 initFromScratch :: String -> IO ()
@@ -49,16 +49,23 @@ initFromScratch name = do
 
 -- get the items of the current porfolio
 -- TODO: make it safer
-getItems :: IO [String]
+getItems :: IO (Maybe [String])
 getItems = do
-  content <- readFile "leaf/wrapper.leaf"
-  return . map (dropWhile (==' ')) . splitWhen (==',') . join . drop 1 . splitWhen (==':') . join . filter (isPrefixOf "Items:") . lines $ content
+  let path = "leaf" </> "wrapper.leaf"
+  doesExist <- doesFileExist path
+  if not doesExist then return Nothing else do
+    content <- readFile "leaf/wrapper.leaf"
+    return . Just $ map (dropWhile (==' ')) . splitWhen (==',') . join . drop 1 . splitWhen (==':') . join . filter (isPrefixOf "Items:") . lines $ content
 
-bootstrap :: IO ()
+bootstrap :: IO Bool
 bootstrap = do
-  items <- getItems
-  sequence_ $ flip appendFile "" . (\n -> "leaf" </> n ++ ".leafc") <$> items
-  putStrLn "generated files, feel free to fulfil them!"
+  maybeItems <- getItems
+  case maybeItems of
+    Nothing -> return False
+    Just items -> do
+      sequence_ $ flip appendFile "" . (\n -> "leaf" </> n ++ ".leafc") <$> items
+      putStrLn "generated files, feel free to fulfil them!"
+      return True
 
 generateHTML :: IO ()
 generateHTML = do
