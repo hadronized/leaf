@@ -47,8 +47,6 @@ initFromScratch name = do
   writeFile (name </> "www/default.css") minimalCSSString
   putStrLn $ "initialised in ./" ++ name
 
--- get the items of the current porfolio
--- TODO: make it safer
 getItems :: IO (Maybe [String])
 getItems = do
   let path = "leaf" </> "wrapper.leaf"
@@ -61,7 +59,7 @@ bootstrap :: IO Bool
 bootstrap = do
   maybeItems <- getItems
   case maybeItems of
-    Nothing -> return False
+    Nothing -> putStrLn "unable to bootstrap" >> return False
     Just items -> do
       sequence_ $ flip appendFile "" . (\n -> "leaf" </> n ++ ".leafc") <$> items
       putStrLn "generated files, feel free to fulfil them!"
@@ -69,19 +67,26 @@ bootstrap = do
 
 generateHTML :: IO ()
 generateHTML = do
-  wrapperContent <- readFile "leaf/wrapper.leaf"
-  let helper = fromString wrapperContent
-      name = prettyName (_wrapperFN helper,_wrapperLN helper,_wrapperNick helper)
-      ownHeader = Wrapper.header name
-      ownFooter = Wrapper.footer name (_wrapperYear helper) Nothing
-      ownNavbar = navbar $ _wrapperItems helper
-      ownWrapper = wrapper ownHeader ownFooter ownNavbar
-  forM_ (_wrapperItems helper) $ \item -> do
-    --let page = "www" </> item ++ ".html"
-    content <- readFile $ "leaf" </> item ++ ".leafc"
-    let doc    = readMarkdown def content
-        output = writeHtml def doc
-    writeFile ("www" </> item ++ ".html") $ renderHtml (ownWrapper item output)
+  let leafPath = "leaf" </> "wrapper.leaf"
+      wwwPath  = "www"
+  doesLeafExist <- doesFileExist leafPath
+  doesWWWExist <- doesDirectoryExist wwwPath
+  if doesLeafExist && doesWWWExist
+    then do
+      wrapperContent <- readFile "leaf/wrapper.leaf"
+      let helper = fromString wrapperContent
+          name = prettyName (_wrapperFN helper,_wrapperLN helper,_wrapperNick helper)
+          ownHeader = Wrapper.header name
+          ownFooter = Wrapper.footer name (_wrapperYear helper) Nothing
+          ownNavbar = navbar $ _wrapperItems helper
+          ownWrapper = wrapper ownHeader ownFooter ownNavbar
+      forM_ (_wrapperItems helper) $ \item -> do
+        --let page = "www" </> item ++ ".html"
+        content <- readFile $ "leaf" </> item ++ ".leafc"
+        let doc    = readMarkdown def content
+            output = writeHtml def doc
+        writeFile ("www" </> item ++ ".html") $ renderHtml (ownWrapper item output)
+    else putStrLn "unable to generate html"
   
 main = do
   -- maybe get the options
