@@ -4,7 +4,7 @@
 name:                  leaf
 version:               1.0.1
 synopsis:              A simple portfolio generator
-description:           leaf is a simple genererator with easy getting started and full support of Markdown.
+description:           leaf is a simple generator with easy getting started and full support of Markdown.
 homepage:              https://github.com/skypers/leaf
 license:               GPL-3
 license-file:          LICENSE
